@@ -1,4 +1,4 @@
-package next.db;
+package core.db;
 
 import com.google.common.collect.Maps;
 import next.model.User;
