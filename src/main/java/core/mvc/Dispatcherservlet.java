@@ -1,6 +1,5 @@
 package core.mvc;
 
-import next.Controller.CreateUserController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,14 +37,14 @@ public class Dispatcherservlet extends HttpServlet {
         Controller controller = requestMapping.getController(requestUri);
         try {
             String viewName = controller.execute(request, response);
-            move(viewName, request, response);
+            returnPage(viewName, request, response);
         } catch (Throwable e) {
             log.error("Exception : {}", e);
             throw new ServletException(e.getMessage());
         }
     }
 
-    private void move(String viewName, HttpServletRequest request, HttpServletResponse response)
+    private void returnPage(String viewName, HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         if (viewName.startsWith(DEFAULT_REDIRECT_PREFIX)) {
             response.sendRedirect(viewName.substring(DEFAULT_REDIRECT_PREFIX.length()));
