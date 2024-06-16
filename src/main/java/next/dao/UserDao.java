@@ -1,10 +1,8 @@
 package next.dao;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import core.jdbc.*;
@@ -15,41 +13,19 @@ import static core.jdbc.JdbcTemplate.*;
 
 
 public class UserDao {
-    public void insert(User user) throws SQLException {
+    public void insert(User user) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
-
-        PreparedStatementSetter pss = new PreparedStatementSetter() {
-            @Override
-            public void setValues(PreparedStatement pstmt) throws SQLException {
-                pstmt.setString(1, user.getUserId());
-                pstmt.setString(2, user.getName());
-                pstmt.setString(3, user.getPassword());
-                pstmt.setString(4, user.getEmail());
-            }
-        };
-
         String query = "INSERT INTO USERS VALUES (?, ?, ?, ?)";
-        jdbcTemplate.insert(query, pss);
+        jdbcTemplate.insert(query, user.getUserId(), user.getName(), user.getPassword(), user.getEmail());
     }
 
-    public void update(User user) throws SQLException {
+    public void update(User user) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
-
-        PreparedStatementSetter pss = new PreparedStatementSetter() {
-            @Override
-            public void setValues(PreparedStatement pstmt) throws SQLException {
-                pstmt.setString(1, user.getName());
-                pstmt.setString(2, user.getPassword());
-                pstmt.setString(3, user.getEmail());
-                pstmt.setString(4, user.getUserId());
-            }
-        };
-
         String query = "UPDATE USERS SET NAME = ?, PASSWORD = ?, EMAIL = ? WHERE USERID = ?";
-        jdbcTemplate.update(query, pss);
+        jdbcTemplate.update(query, user.getName(), user.getPassword(), user.getEmail(), user.getUserId());
     }
 
-    public List<User> findAll() throws SQLException {
+    public List<User> findAll() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
 
         PreparedStatementSetter pss = new PreparedStatementSetter() {
@@ -57,9 +33,9 @@ public class UserDao {
             public void setValues(PreparedStatement pstmt) throws SQLException {
             }
         };
-        RowMapper rm = new RowMapper() {
+        RowMapper<User> rm = new RowMapper<User>() {
             @Override
-            public Object mapRow(ResultSet rs) throws SQLException {
+            public User mapRow(ResultSet rs) throws SQLException {
                 return new User(rs.getString("userId"),
                         rs.getString("password"),
                         rs.getString("name"),
@@ -80,9 +56,9 @@ public class UserDao {
                 pstmt.setString(1, userId);
             }
         };
-        RowMapper rm = new RowMapper() {
+        RowMapper<User> rm = new RowMapper<User>() {
             @Override
-            public Object mapRow(ResultSet rs) throws SQLException {
+            public User mapRow(ResultSet rs) throws SQLException {
                 return new User(rs.getString("userId"),
                         rs.getString("password"),
                         rs.getString("name"),
